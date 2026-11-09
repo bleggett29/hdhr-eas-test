@@ -1,0 +1,10 @@
+build/
+dist/
+/hdhr_eas_test
+/hdhr_eas_test_gui
+/render
+/ffplay
+/ffmpeg
+*.o
+build.log
+ffplay_build.log
