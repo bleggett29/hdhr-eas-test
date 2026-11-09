@@ -1,0 +1,30 @@
+# Builds the Windows 10/11 version on GitHub's servers.
+# Put this package in a GitHub repository (this file at .github/workflows/),
+# then Actions -> "Windows build" -> Run workflow.  The finished folder is
+# attached to the run as "hdhr_eas_test_v0.5_windows_x64".
+name: Windows build
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: make zip git patch
+          pacboy: gcc:p pkgconf:p gtk4:p libxml2:p ffmpeg:p openssl:p zlib:p SDL2:p nasm:p
+      - name: Build
+        run: ./build_windows.sh --no-deps
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hdhr_eas_test_v0.5_windows_x64
+          path: dist/hdhr_eas_test/
